@@ -1,0 +1,9 @@
+- name: chrony | service > restart chronyd.service
+  service:
+    name:  chronyd.service
+    state: restarted
+
+- name: ntp | service > restart ntpd.service
+  service:
+    name:  ntpd.service
+    state: restarted

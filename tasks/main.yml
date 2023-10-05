@@ -1,0 +1,15 @@
+- block:
+  # KO in chroot
+  # - name: timezone > set the hardware clock in {{ time_format }} mode
+  #   timezone:
+  #     hwclock: "{{ time_format }}"        # UTC = timedatectl set-local-rtc 0
+
+  - import_tasks: chrony.yml
+
+  - import_tasks: ntp.yml
+
+  - name: shell > set the hardware clock from the system clock
+    shell: hwclock --systohc {{ "--utc" if time_format == "UTC" else "--localtime" if time_format == "localtime" }}
+
+  become_user: root
+  tags: ntp

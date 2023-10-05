@@ -1,0 +1,33 @@
+- block:
+  # systemd/timedate can't run at the same time with chrony or ntp
+  - name: chrony | service > stop and disable systemd-timesyncd
+    service:
+      name:    systemd-timesyncd
+      state:   stopped
+      enabled: false
+    when: inventory_hostname != "chroot"
+
+  - name: chrony | package > install chrony
+    package:
+      name: chrony
+
+  - name: chrony | copy > chrony config file
+    template:
+      src:  chrony.conf
+      dest: /etc/chrony.conf
+    notify: "chrony | service > restart chronyd.service"
+
+  - name: ntp | service > start and enable chrony
+    service:
+      name:    chronyd.service
+      state:   started
+      enabled: true
+
+  ## ?
+  # - name: "[aur] install dispatcher script for chrony"
+  #   aur:
+  #     name: networkmanager-dispatcher-chrony
+  #   become_user: "{{ aur_user }}"
+
+  when: ntp_daemon == "chrony"
+  tags: chrony

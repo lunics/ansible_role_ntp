@@ -1,0 +1,26 @@
+- block:
+  # systemd/timedate can't run at the same time with chrony or ntp
+  - name: ntp | service > stop and disable systemd-timesyncd
+    service:
+      name:    systemd-timesyncd
+      state:   stopped
+      enabled: false
+
+  - name: ntp | pacman > install ntp
+    pacman:
+      name: ntp
+
+  - name: ntp | template > generate ntp config file
+    template:
+      src:  ntp.conf
+      dest: /etc/ntp.conf
+    notify: "ntp | service > restart ntpd.service"
+
+  - name: ntp | service > start and enable ntp
+    service:
+      name:    ntpd.service
+      state:   started
+      enabled: true
+
+  when: ntp_daemon == "ntp"
+  tags: ntp
