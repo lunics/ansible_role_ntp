@@ -1,7 +1,7 @@
 galaxy_info:
-  role_name:    dns
+  role_name:    ntp
   author:       lunics
-  description:  A role to setup /etc/hosts and resolv.conf.
+  description:  A role to setup Chrony or NTP.
   license:      GPL-3.0
   company:      none
   min_ansible_version: 2.1
@@ -10,5 +10,6 @@ galaxy_info:
       versions:
         - all
   galaxy_tags:
-    - dns
+    - ntp
+    - chrony
 dependencies: []
